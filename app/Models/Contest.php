@@ -11,7 +11,22 @@ class Contest extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'type', 'active', 'created_by'];
+    protected $fillable = [
+        'name',
+        'type',
+        'active',
+        'created_by'
+    ];
+
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
+    const TYPES = [
+        'season-long',
+        'weekly',
+        'survivor'
+    ];
 
     public function creator(): BelongsTo
     {
@@ -21,6 +36,16 @@ class Contest extends Model
     public function matchups(): HasMany
     {
         return $this->hasMany(Matchup::class);
+    }
+
+    public function picks(): HasMany
+    {
+        return $this->hasMany(Pick::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
     }
 }
 
