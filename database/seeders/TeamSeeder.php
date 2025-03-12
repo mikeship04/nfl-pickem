@@ -2,14 +2,18 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Team;
+use Illuminate\Database\Seeder;
 
 class TeamSeeder extends Seeder
 {
     public function run(): void
     {
-        Team::factory()->count(32)->create(); // Create 32 teams
+        $factory = Team::factory();
+        
+        $factory->reset();
+        
+        Team::factory()->count(32)->create();
     }
 }
 

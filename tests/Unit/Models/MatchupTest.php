@@ -61,21 +61,16 @@ class MatchupTest extends TestCase
     #[Test]
     public function a_matchup_has_many_picks()
     {
-        $teams = Team::factory()->count(2)->create();
-        $contest = Contest::factory()->create();
-        $matchup = Matchup::factory()->create([
-            'contest_id' => $contest->id,
-            'team_1' => $teams[0]->id,
-            'team_2' => $teams[1]->id
-        ]);
+        $teams = Team::inRandomOrder()->limit(2)->get();
+        $contest = Contest::inRandomOrder()->first();
+        $matchup = Matchup::inRandomOrder()->first();
 
-        // Create picks with different users
         for ($i = 0; $i < 3; $i++) {
             Pick::factory()->create([
                 'user_id' => User::factory()->create()->id, // New user for each pick
                 'contest_id' => $contest->id,
                 'matchup_id' => $matchup->id,
-                'team_id' => $teams[0]->id // Using a team that's part of the matchup
+                'team_id' => $teams[0]->id
             ]);
         }
 

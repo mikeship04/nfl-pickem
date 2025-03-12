@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use App\Models\Pick;
 use App\Models\User;
 use App\Models\Contest;
-use App\Models\Matchup;
 use Illuminate\Support\Facades\DB;
 
 class PickSeeder extends Seeder
@@ -22,11 +21,16 @@ class PickSeeder extends Seeder
                 foreach ($contests as $contest) {
                     $matchups = $contest->matchups->take(5);
                     foreach ($matchups as $matchup) {
+
+                        $team_choices = [0, 1];
+                        $chosen_index = array_rand($team_choices);
+                        $chosen_team = $chosen_index === 0 ? $matchup->team_1 : $matchup->team_2;
+
                         $picks[] = [
                             'user_id' => $user->id,
                             'contest_id' => $contest->id,
                             'matchup_id' => $matchup->id,
-                            'team_id' => rand(0, 1) ? $matchup->team_1 : $matchup->team_2,
+                            'team_id' => $chosen_team,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ];
@@ -34,7 +38,6 @@ class PickSeeder extends Seeder
                 }
             }
             
-            // Bulk insert for better performance
             foreach (array_chunk($picks, 1000) as $chunk) {
                 Pick::insert($chunk);
             }

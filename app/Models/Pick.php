@@ -17,6 +17,16 @@ class Pick extends Model
         'team_id'
     ];
 
+    protected static function booted()
+    {
+        static::creating(function ($pick) {
+            $matchup = $pick->matchup;
+            if (!in_array($pick->team_id, [$matchup->team_1, $matchup->team_2])) {
+                throw new \InvalidArgumentException('Selected team must be part of the matchup');
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

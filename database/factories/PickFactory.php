@@ -14,7 +14,7 @@ class PickFactory extends Factory
 
     public function definition(): array
     {
-        $teams = Team::factory()->count(2)->create();
+        $teams = Team::inRandomOrder()->limit(2)->get();
         $contest = Contest::factory()->create();
         $matchup = Matchup::factory()->create([
             'contest_id' => $contest->id,

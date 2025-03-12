@@ -12,7 +12,11 @@ class MatchupFactory extends Factory
 
     public function definition(): array
     {
-        $teams = Team::factory()->count(2)->create();
+        if (Team::count() === 0) {
+            throw new \RuntimeException('No teams found in database. Please run TeamSeeder first.');
+        }
+
+        $teams = Team::inRandomOrder()->limit(2)->get();
         
         return [
             'contest_id' => Contest::factory(),

@@ -11,37 +11,31 @@ class MatchupSeeder extends Seeder
 {
     public function run(): void
     {
+        if (Team::count() === 0) {
+            $this->call(TeamSeeder::class);
+        }
         $teams = Team::all();
+
+        if (Contest::count() === 0) {
+            $this->call(ContestSeeder::class);
+        }
         $contests = Contest::all();
 
-        if ($teams->count() < 2) {
-            $teams = Team::factory()->count(32)->create();
+        foreach ($contests as $contest) {
+            for ($week = 1; $week <= 18; $week++) {
+                for ($i = 0; $i < 2; $i++) {
+                    $matchupTeams = $teams->random(2);
+                    
+                    Matchup::create([
+                        'contest_id' => $contest->id,
+                        'week' => $week,
+                        'team_1' => $matchupTeams[0]->id,
+                        'team_2' => $matchupTeams[1]->id,
+                        'active' => true
+                    ]);
+                }
+            }
         }
-
-        if ($contests->isEmpty()) {
-            $contests = Contest::factory()->count(10)->create();
-        }
-
-        Matchup::factory()
-            ->count(20)
-            ->make()
-            ->each(function ($matchup) use ($teams, $contests) {
-                $matchup->contest_id = $contests->random()->id;
-
-                // Ensure team_1 and team_2 are different
-                do {
-                    $team1 = $teams->random()->id;
-                    $team2 = $teams->random()->id;
-                } while ($team1 === $team2);
-
-                $matchup->team_1 = $team1;
-                $matchup->team_2 = $team2;
-
-                // Assign a week value between 1 and 18
-                $matchup->week = rand(1, 18);
-
-                $matchup->save();
-            });
     }
 }
 

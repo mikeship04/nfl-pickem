@@ -90,15 +90,15 @@ class PickTest extends TestCase
     #[Test]
     public function pick_team_must_be_part_of_matchup()
     {
-        $invalidTeam = Team::factory()->create();
+        $otherTeam = Team::factory()->create();
         
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(\InvalidArgumentException::class);
         
         Pick::factory()->create([
             'user_id' => $this->user->id,
             'contest_id' => $this->contest->id,
             'matchup_id' => $this->matchup->id,
-            'team_id' => $invalidTeam->id
+            'team_id' => $otherTeam->id
         ]);
     }
 }

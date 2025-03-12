@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Team;
 
 class TeamFactory extends Factory
 {
     protected $model = \App\Models\Team::class;
     
-    // Real NFL team names and abbreviations
+    protected static $teamIndex = 0;
     protected $teams = [
         ['name' => 'Arizona Cardinals', 'abbreviation' => 'ARI'],
         ['name' => 'Atlanta Falcons', 'abbreviation' => 'ATL'],
@@ -46,13 +47,20 @@ class TeamFactory extends Factory
 
     public function definition(): array
     {
-        $team = $this->faker->unique()->randomElement($this->teams);
+        static $teamId = 100;
+
         return [
-            'name' => $team['name'],
-            'abbreviation' => $team['abbreviation'],
+            'id' => $teamId++,
+            'name' => $this->faker->unique()->company,
+            'abbreviation' => $this->faker->unique()->lexify('???'),
             'created_at' => now(),
             'updated_at' => now(),
         ];
+    }
+
+    public function reset(): void
+    {
+        static::$teamIndex = 0;
     }
 }
 
