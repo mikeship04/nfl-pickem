@@ -41,7 +41,7 @@ class MatchupTest extends TestCase
     }
 
     #[Test]
-    public function matchup_has_two_teams()
+    public function matchup_has_two_different_teams()
     {
         $this->assertInstanceOf(Team::class, $this->matchup->teamOne);
         $this->assertInstanceOf(Team::class, $this->matchup->teamTwo);

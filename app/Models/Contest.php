@@ -28,7 +28,7 @@ class Contest extends Model
         'survivor'
     ];
 
-    public function creator(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
@@ -43,7 +43,7 @@ class Contest extends Model
         return $this->hasMany(Pick::class);
     }
 
-    public function scopeActive($query)
+    public function active($query)
     {
         return $query->where('active', true);
     }

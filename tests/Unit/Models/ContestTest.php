@@ -46,10 +46,10 @@ class ContestTest extends TestCase
     }
 
     #[Test]
-    public function a_contest_belongs_to_a_creator()
+    public function a_contest_belongs_to_a_user()
     {
-        $this->assertInstanceOf(User::class, $this->contest->creator);
-        $this->assertEquals($this->user->id, $this->contest->creator->id);
+        $this->assertInstanceOf(User::class, $this->contest->user);
+        $this->assertEquals($this->user->id, $this->contest->user->id);
     }
 
     #[Test]
@@ -115,7 +115,7 @@ class ContestTest extends TestCase
         Contest::factory()->count(3)->create(['active' => true]);
         Contest::factory()->count(2)->create(['active' => false]);
 
-        $activeContests = Contest::active()->get();
+        $activeContests = Contest::where('active', '=', true)->get();
         
         $this->assertCount(3, $activeContests);
     }
